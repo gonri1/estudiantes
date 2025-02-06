@@ -91,7 +91,7 @@ namespace Estudiantes
 
         private void textBoxNid_KeyPress(object sender, KeyPressEventArgs e)
         {
-             estudiante.textBoxEvent.TextKeyPress(e);
+             estudiante.textBoxEvent.NumberKeyPress(e);
         }
 
 

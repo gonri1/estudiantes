@@ -9,26 +9,50 @@ namespace Logica.Library
 {
     public class TextBoxEvent
     {
-        //Metodo que captura el texto presionado en el TextBox (e) y da permisos o no (e.Handled)
+
+        // METODOS QUE CAPTURAN EL TEXTO PRESIONADO EN EL TEXTBOX (E) Y DA PERMISOS O NO (E.HANDLED)
+
+        // Metodo que permite escribir solo letras en un TextBox
         public void TextKeyPress(KeyPressEventArgs e)
         {
-            if (char.IsLetter(e.KeyChar))//Si el caracter es una letra
+            if (char.IsLetter(e.KeyChar)) // si el caracter es una letra
             {
-                e.Handled = false;//Permite escribir
+                e.Handled = false; // permite escribir
             }
-            else if (char.IsControl(e.KeyChar))//Si el caracter es un control
+            else if (char.IsControl(e.KeyChar)) // si el caracter es un control
             {
-                e.Handled = false;//Permite escribir
+                e.Handled = false; // permite escribir
             }
-            else if (char.IsSeparator(e.KeyChar))//Si el caracter es un espacio
+            else if (char.IsSeparator(e.KeyChar)) // si el caracter es un espacio
             {
-                e.Handled = false;//Permite escribir
+                e.Handled = false; // permite escribir
             }
             else
             {
-                e.Handled = true;//No permite escribir
+                e.Handled = true; // no permite escribir
             }
-        }   
+        }
 
+
+        // Metodo que permite escribir solo números en un TextBox
+        public void NumberKeyPress(KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar)) // si el caracter es un dígito
+            {
+                e.Handled = false; // permite escribir
+            }
+            else if (char.IsControl(e.KeyChar)) // si el caracter es un control
+            {
+                e.Handled = false; // permite escribir
+            }
+            else if (char.IsSeparator(e.KeyChar)) // si el caracter es un espacio
+            {
+                e.Handled = false; // permite escribir
+            }
+            else
+            {
+                e.Handled = true; // no permite escribir
+            }
+        }
     }
 }

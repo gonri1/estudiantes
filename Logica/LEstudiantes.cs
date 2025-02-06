@@ -7,7 +7,7 @@ using Logica.Library;//Referencia a la capa Logica para usar la clase Uploadimag
 
 namespace Logica//Este nanespace coincide con el nombre de la capa
 {
-    public class LEstudiantes : Uploadimage
+    public class LEstudiantes :LibreriaClases
     {
 
 

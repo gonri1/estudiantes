@@ -15,12 +15,55 @@ namespace Estudiantes
     public partial class Form1 : Form
     {
 
-        private LEstudiantes estudiante = new LEstudiantes();//Instancia de la clase Estudiantes
+        private LEstudiantes estudiante;
 
 
         public Form1()
         {
+
+            //inicializa el formulario
+
             InitializeComponent();
+
+
+
+            //Captura los TextBox del formulario en una lista
+
+
+            var listTextBox = new List<TextBox>();//Lista de TextBox
+
+            listTextBox.Add(textBoxNid);//Agrega el TextBoxNid a la lista
+            listTextBox.Add(textBoxNombre);//Agrega el TextBoxNombre a la lista
+            listTextBox.Add(textBoxApellido);//Agrega el TextBoxApellido a la lista
+            listTextBox.Add(textBoxEmail);//Agrega el TextBoxEmail a la lista
+
+          
+
+
+            //Captura los Labels del formulario en una lista
+
+            var listLabel = new List<Label>();//Lista de Labels
+
+            listLabel.Add(labelNid);//Agrega el LabelNid a la lista
+            listLabel.Add(labelNombre);//Agrega el LabelNombre a la lista
+            listLabel.Add(labelApellido);//Agrega el LabelApellido a la lista
+            listLabel.Add(labelEmail);//Agrega el LabelEmail a la lista
+
+
+
+            // Lista de imagenes en bytes
+
+            Object[] objetos = { pictureBoxImage };
+            
+
+
+
+            //****INSTANCIA PRINCIPAL***** con sus parametros,elementos de texto del formulario y las labels****
+
+            estudiante = new LEstudiantes(listTextBox, listLabel, objetos);
+
+            //***************************************************************
+
         }
 
         private void pictureBoxImage_Click(object sender, EventArgs e)
@@ -111,12 +154,15 @@ namespace Estudiantes
 
         private void textBoxEmail_KeyPress(object sender, KeyPressEventArgs e)
         {
-            estudiante.textBoxEvent.TextKeyPress(e);
+            estudiante.textBoxEvent.EmailKeyPress(e);
 
         }
 
 
-
-
+        //EVENTO QUE COMPRUEBA AL HACER CLICK EN AGREGAR, SI SE HA PASADO POR TODOS LOS CAMPOS OBLIGATORIOS
+        private void buttonAgregar_Click(object sender, EventArgs e)
+        {
+            estudiante.Registrar();//Llama al metodo Registrar de la clase LEstudiantes
+        }
     }
 }

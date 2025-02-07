@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;//Para usar la clase Image
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Logica.Library
 
 
         // Metodo permite cargar una imagen en un PictureBox abriendo un cuadro de dialogo
+
         public void CargarImagen(PictureBox pictureBox)
         {
             pictureBox.WaitOnLoad = true;//carga asincrona
@@ -28,6 +30,17 @@ namespace Logica.Library
                     pictureBox.ImageLocation = fd.FileName;//Carga la imagen en el PictureBox
             }
 
+        }
+
+        //  Método que retorna un array de bytes y recibe una imagen del picture box
+
+        public byte[] ImageToByte(Image img)
+        {
+
+            var converter= new ImageConverter();
+
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));
+            
         }
     }
 }

@@ -151,6 +151,7 @@
             this.buttonAgregar.TabIndex = 5;
             this.buttonAgregar.Text = "Agregar";
             this.buttonAgregar.UseVisualStyleBackColor = false;
+            this.buttonAgregar.Click += new System.EventHandler(this.buttonAgregar_Click);
             // 
             // labelEmail
             // 

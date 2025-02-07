@@ -8,7 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Logica;//Referencia a la capa Logica para usar la clase LEstudiantes
+using Logica;//Referencia a la capa lógica para usar sus clases
+using Logica.Library;//Referencia a la capa Logica para usar la clase LEstudiantes
+
+
 
 namespace Estudiantes
 {
@@ -16,10 +19,12 @@ namespace Estudiantes
     {
 
         private LEstudiantes estudiante;
+    
 
 
         public Form1()
         {
+           
 
             //inicializa el formulario
 

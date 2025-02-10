@@ -172,5 +172,12 @@ namespace Estudiantes
         {
             estudiante.Registrar();//Llama al metodo Registrar de la clase LEstudiantes
         }
+        
+
+        //EVENTO QUE BUSCA AL ESTUDIANTE Y LO MUESTRA EN EL 
+        private void textBoxBuscar_TextChanged(object sender, EventArgs e)
+        {
+            estudiante.SearchEstudiante(textBoxBuscar.Text);
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
         //Paginado
 
-        private int _reg_por_pagina=2;
+        private int _reg_por_pagina=5;
         private int _num_pagina=1;
 
         public LEstudiantes(List<TextBox> listTextBox, List<Label> listLabel, object[] objetos)
@@ -31,7 +31,8 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             Restablecer();
         }
 
-        public void Registrar()//Metodo para registrar un estudiante, boton agregar
+        //MÉTODO QUE REGUSTRA UN ESTUDIANTE CON EL BOTON AGREGAR()
+        public void Registrar()
         {
             bool allFieldsFilled = true;
 
@@ -137,34 +138,63 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             }
         }
 
-        private void SearchEstudiante(string campoABuscar)
+
+        //MÉTODO QUE BUSCA UN ESTUDIANTE Y LO MUESTRA EN EL DataGridView
+        public void SearchEstudiante(string campoABuscar)
         {
             List<Estudiante> query = new List<Estudiante>();
 
             int inicio = (_num_pagina - 1) * _reg_por_pagina;
 
-            if (campoABuscar.Equals(""))
+            if (string.IsNullOrEmpty(campoABuscar))
             {
                 query = _Estudiante.ToList(); // Obtenemos en forma de lista, toda informacion del objeto _Estudiante
             }
             else
             {
-                // Filtrar estudiantes por NID, apellido o nombre que comiencen con el valor de campoABuscar
-                query = _Estudiante.Where(dato => dato.nid.StartsWith(campoABuscar) || dato.apellido.StartsWith(campoABuscar) || dato.nombre.StartsWith(campoABuscar)).ToList();//toList(), lo convierte en una lista
+                // Filtrar estudiantes por NID, apellido o nombre que contengan el valor de campoABuscar
+                query = _Estudiante.Where(dato => dato.nid.Contains(campoABuscar) || dato.apellido.Contains(campoABuscar) || dato.nombre.Contains(campoABuscar)).ToList();
             }
 
             //Verificamos si el valor tiene registros y inicializamos un paginador
 
-            if (query.Count > 0) {
+            if (query.Count > 0)
+            {
 
                 // Asignamos la fuente de datos del DataGridView a una lista de estudiantes filtrada
                 // Seleccionamos solo los campos id, nombre, apellido y email para mostrar en el DataGridView
                 // A partir de .Skip es cuando empieza el paginador, 
-                _dataGridView.DataSource = query.Select(dato => new { dato.id, dato.nombre, dato.apellido, dato.email }).Skip(10).Take(_reg_por_pagina).ToList();
-            
+
+                _dataGridView.DataSource = query.Select(dato => new { dato.id, dato.nid, dato.nombre, dato.apellido, dato.email }).Skip(inicio).Take(_reg_por_pagina).ToList();
+
+                //Oculamos la columna id
+                _dataGridView.Columns[0].Visible = false;
+
+                //Cambiamos estilos de las columnas del DataGridView
+
+                _dataGridView.Columns[1].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
+                _dataGridView.Columns[1].HeaderCell.Style.ForeColor = Color.Black;
+                _dataGridView.Columns[1].HeaderCell.Style.BackColor = Color.WhiteSmoke;
+                _dataGridView.Columns[1].HeaderText = _dataGridView.Columns[1].HeaderText.ToUpper();
+
+                _dataGridView.Columns[3].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
+                _dataGridView.Columns[3].HeaderCell.Style.ForeColor = Color.Black;
+                _dataGridView.Columns[3].HeaderCell.Style.BackColor = Color.WhiteSmoke;
+                _dataGridView.Columns[3].HeaderText = _dataGridView.Columns[3].HeaderText.ToUpper();
+
+                _dataGridView.Columns[2].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
+                _dataGridView.Columns[2].HeaderCell.Style.ForeColor = Color.Black;
+                _dataGridView.Columns[2].HeaderCell.Style.BackColor = Color.Beige;
+                _dataGridView.Columns[2].HeaderText = _dataGridView.Columns[2].HeaderText.ToUpper();
+
+                _dataGridView.Columns[4].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
+                _dataGridView.Columns[4].HeaderCell.Style.ForeColor = Color.Black;
+                _dataGridView.Columns[4].HeaderCell.Style.BackColor = Color.Beige;
+                _dataGridView.Columns[4].HeaderText = _dataGridView.Columns[4].HeaderText.ToUpper();
             }
         }
-
+        
+        //Método para restablecer el formulario y que quede vacio cuando se envia todo
         private void Restablecer()
         {
             // Cambiamos  los textos de las Label y le damos color

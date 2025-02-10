@@ -58,7 +58,10 @@ namespace Estudiantes
 
             // Lista de imagenes en bytes
 
-            Object[] objetos = { pictureBoxImage };
+            Object[] objetos = { 
+                pictureBoxImage,
+                dataGridView1 
+            };
             
 
 

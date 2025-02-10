@@ -12,8 +12,8 @@ namespace Data
     public class Estudiante
     {
         [PrimaryKey, Identity]//Marcamos "id" como clave primaria
-        public int id { get; set; }
-        public string nid { get; set; }
+        public int id { get; set; }//
+        public string nid { get; set; }// esto es
         public string nombre { get; set; }
         public string apellido { get; set; }
         public string email { get; set; }

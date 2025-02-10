@@ -39,7 +39,7 @@ namespace Logica.Library
 
             var converter= new ImageConverter();
 
-            return (byte[])converter.ConvertTo(img, typeof(byte[]));
+            return (byte[])converter.ConvertTo(img, typeof(byte[]));//Devuelve un objeto que casteamos a un array de bytes
             
         }
     }

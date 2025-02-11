@@ -53,6 +53,7 @@ namespace Estudiantes
             listLabel.Add(labelNombre);//Agrega el LabelNombre a la lista
             listLabel.Add(labelApellido);//Agrega el LabelApellido a la lista
             listLabel.Add(labelEmail);//Agrega el LabelEmail a la lista
+            listLabel.Add(labelPaginas);//Agrega el Label de la paginación a la lista
 
 
 
@@ -60,7 +61,8 @@ namespace Estudiantes
 
             Object[] objetos = { 
                 pictureBoxImage,
-                dataGridView1 
+                dataGridView1,
+                numericUpDown1
             };
             
 
@@ -178,6 +180,34 @@ namespace Estudiantes
         private void textBoxBuscar_TextChanged(object sender, EventArgs e)
         {
             estudiante.SearchEstudiante(textBoxBuscar.Text);
+        }
+
+
+        //********EVENTOS DEL PAGINADOR*************************
+
+
+        //EVENTO QUE NOS PERMITE IR AL PRIMER REGISTRO
+        private void buttonPrimero_Click(object sender, EventArgs e)
+        {
+            estudiante.Paginador("Primero");
+        }
+
+        //EVENTO QUE NOS PERMITE IR AL REGISTRO ANTERIOR
+        private void buttonAnterior_Click(object sender, EventArgs e)
+        {
+            estudiante.Paginador("Anterior");
+        }
+
+        //EVENTO QUE NOS PERMITE IR AL SIGUIENTE REGISTRO
+        private void buttonSiguiente_Click(object sender, EventArgs e)
+        {
+            estudiante.Paginador("Siguiente");
+        }
+
+        //EVENTO QUE NOS PERMITE IR AL ULTIMO REGISTRO
+        private void buttonUltimo_Click(object sender, EventArgs e)
+        {
+            estudiante.Paginador("Ultimo");
         }
     }
 }

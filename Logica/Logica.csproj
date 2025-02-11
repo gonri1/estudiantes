@@ -60,6 +60,7 @@
     <Compile Include="Library\LibreriaClases.cs" />
     <Compile Include="Library\TextBoxEvent.cs" />
     <Compile Include="Library\Uploadimage.cs" />
+    <Compile Include="paginador.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

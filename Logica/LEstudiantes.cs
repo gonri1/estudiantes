@@ -16,20 +16,29 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         private List<Label> listLabel;
         private PictureBox image;
         private DataGridView _dataGridView;//Objeto del data grid del diséño (donde van a ir el listado impreso de los estudiantes)
+        private NumericUpDown _numericUpDown;
+        private Paginador<Estudiante> _paginador; //** Creamos un atributo de la clase generica Paginador que va a contener la clase de modelo Estudiante
 
         //Paginado
 
-        private int _reg_por_pagina=5;
+        private int _reg_por_pagina=10;
         private int _num_pagina=1;
+        private List<Estudiante> listEstudiante;
 
         public LEstudiantes(List<TextBox> listTextBox, List<Label> listLabel, object[] objetos)
         {
             this.listTextBox = listTextBox;
             this.listLabel = listLabel;
+
             image = (PictureBox)objetos[0];
             _dataGridView = (DataGridView)objetos[1];
+            _numericUpDown = (NumericUpDown)objetos[2];
+
             Restablecer();
         }
+
+
+
 
         //MÉTODO QUE REGUSTRA UN ESTUDIANTE CON EL BOTON AGREGAR()
         public void Registrar()
@@ -139,60 +148,89 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         }
 
 
+
+
+
         //MÉTODO QUE BUSCA UN ESTUDIANTE Y LO MUESTRA EN EL DataGridView
+
         public void SearchEstudiante(string campoABuscar)
         {
-            List<Estudiante> query = new List<Estudiante>();
+            // Calculamos el índice de inicio para la paginación
 
             int inicio = (_num_pagina - 1) * _reg_por_pagina;
 
-            if (string.IsNullOrEmpty(campoABuscar))
+            // Filtramos la lista de estudiantes:
+            // - Si 'campoABuscar' está vacío, devolvemos todos los estudiantes.
+            // - Si tiene un valor, filtramos por 'nid', 'apellido' o 'nombre'.
+
+            var query = _Estudiante.Where(dato =>
+                string.IsNullOrEmpty(campoABuscar) || // Si es vacío, devuelve todos
+                dato.nid.Contains(campoABuscar) ||   // Si no, busca coincidencias en 'nid'
+                dato.apellido.Contains(campoABuscar) || // O en 'apellido'
+                dato.nombre.Contains(campoABuscar));    // O en 'nombre'
+
+            // Aplicamos paginación y seleccionamos solo los campos necesarios
+
+            var listaFiltrada = query
+                .Select(dato => new { dato.id, dato.nid, dato.nombre, dato.apellido, dato.email }) // Seleccionamos solo estos campos
+                .Skip(inicio)  // Omitimos los registros de páginas anteriores
+                .Take(_reg_por_pagina) // Tomamos solo los registros de la página actual
+                .ToList(); // Convertimos la consulta en una lista
+
+            // Verificamos si hay resultados antes de asignar la lista al DataGridView
+
+            if (listaFiltrada.Count > 0)
             {
-                query = _Estudiante.ToList(); // Obtenemos en forma de lista, toda informacion del objeto _Estudiante
-            }
-            else
-            {
-                // Filtrar estudiantes por NID, apellido o nombre que contengan el valor de campoABuscar
-                query = _Estudiante.Where(dato => dato.nid.Contains(campoABuscar) || dato.apellido.Contains(campoABuscar) || dato.nombre.Contains(campoABuscar)).ToList();
-            }
+                _dataGridView.DataSource = listaFiltrada; // Asignamos la lista filtrada al DataGridView
 
-            //Verificamos si el valor tiene registros y inicializamos un paginador
+                // Ocultamos la columna de ID, ya que no es necesario mostrarla al usuario
 
-            if (query.Count > 0)
-            {
-
-                // Asignamos la fuente de datos del DataGridView a una lista de estudiantes filtrada
-                // Seleccionamos solo los campos id, nombre, apellido y email para mostrar en el DataGridView
-                // A partir de .Skip es cuando empieza el paginador, 
-
-                _dataGridView.DataSource = query.Select(dato => new { dato.id, dato.nid, dato.nombre, dato.apellido, dato.email }).Skip(inicio).Take(_reg_por_pagina).ToList();
-
-                //Oculamos la columna id
                 _dataGridView.Columns[0].Visible = false;
 
-                //Cambiamos estilos de las columnas del DataGridView
+                // Definimos qué columnas queremos modificar en el DataGridView
 
-                _dataGridView.Columns[1].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
-                _dataGridView.Columns[1].HeaderCell.Style.ForeColor = Color.Black;
-                _dataGridView.Columns[1].HeaderCell.Style.BackColor = Color.WhiteSmoke;
-                _dataGridView.Columns[1].HeaderText = _dataGridView.Columns[1].HeaderText.ToUpper();
+                var columnas = new[] { 1, 2, 3, 4 }; // Índices de las columnas visibles
 
-                _dataGridView.Columns[3].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
-                _dataGridView.Columns[3].HeaderCell.Style.ForeColor = Color.Black;
-                _dataGridView.Columns[3].HeaderCell.Style.BackColor = Color.WhiteSmoke;
-                _dataGridView.Columns[3].HeaderText = _dataGridView.Columns[3].HeaderText.ToUpper();
+                var colores = new[] { Color.WhiteSmoke, Color.Beige, Color.WhiteSmoke, Color.Beige }; // Colores alternados
 
-                _dataGridView.Columns[2].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
-                _dataGridView.Columns[2].HeaderCell.Style.ForeColor = Color.Black;
-                _dataGridView.Columns[2].HeaderCell.Style.BackColor = Color.Beige;
-                _dataGridView.Columns[2].HeaderText = _dataGridView.Columns[2].HeaderText.ToUpper();
-
-                _dataGridView.Columns[4].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold);
-                _dataGridView.Columns[4].HeaderCell.Style.ForeColor = Color.Black;
-                _dataGridView.Columns[4].HeaderCell.Style.BackColor = Color.Beige;
-                _dataGridView.Columns[4].HeaderText = _dataGridView.Columns[4].HeaderText.ToUpper();
+                // Aplicamos estilos a las columnas de manera dinámica
+                for (int i = 0; i < columnas.Length; i++)
+                {
+                    _dataGridView.Columns[columnas[i]].HeaderCell.Style.Font = new Font(_dataGridView.Font, FontStyle.Bold); // Fuente en negrita
+                    _dataGridView.Columns[columnas[i]].HeaderCell.Style.ForeColor = Color.Black; // Color de la fuente negro
+                    _dataGridView.Columns[columnas[i]].HeaderCell.Style.BackColor = colores[i]; // Color de fondo
+                    _dataGridView.Columns[columnas[i]].HeaderText = _dataGridView.Columns[columnas[i]].HeaderText.ToUpper(); // Convertimos el texto en mayúsculas
+                }
             }
         }
+
+
+
+        public void Paginador(string metodo)
+        {
+            switch (metodo)
+            {
+                case "Primero":
+                    _num_pagina = _paginador.primero();
+                    break;
+                case "Anterior":
+                    _num_pagina = _paginador.anterior();
+                    break;
+                case "Siguiente":
+                    _num_pagina = _paginador.siguiente();
+                    break;
+                case "Ultimo":
+                    _num_pagina = _paginador.ultimo();
+                    break;
+                default:
+                    throw new ArgumentException("Método no válido", nameof(metodo));
+            }
+
+            SearchEstudiante("");
+        }
+
+
+
         
         //Método para restablecer el formulario y que quede vacio cuando se envia todo
         private void Restablecer()
@@ -214,6 +252,19 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             listTextBox[1].Text = string.Empty;
             listTextBox[2].Text = string.Empty;
             listTextBox[3].Text = string.Empty;
+
+
+
+            // FRAGMENTO QUE SIRVE AL PAGINADOR
+                
+            listEstudiante = _Estudiante.ToList();//Creamos una lista con los objetos que hay en Estudiante
+
+            if (0 < listEstudiante.Count)//Comprobamos que haya elmentos
+            {
+                //Si, los hay, creamos una instancia de Paginador, que es una clase Generica y que admite objetos de la clase Estudiante
+               _paginador= new Paginador<Estudiante>(listEstudiante, listLabel[4], _reg_por_pagina);
+                
+            }
 
             //Imprimimos la lista en pantalla con SearchEstudiante()
 

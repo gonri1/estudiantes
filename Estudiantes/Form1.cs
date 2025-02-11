@@ -209,5 +209,11 @@ namespace Estudiantes
         {
             estudiante.Paginador("Ultimo");
         }
+
+        //EVENTO QUE NOS PERMITE CAMBIAR EN LA INTERFAZ EL VALOR DE numericUpdown, QUE ES DONDE PODEMOS ELEGIR EL NUMERO DE REGISTROS POR PAGINA DE MANERA DINAMICA
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            estudiante.Registro_Paginas();
+        }
     }
 }

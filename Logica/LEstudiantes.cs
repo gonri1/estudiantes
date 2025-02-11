@@ -21,7 +21,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
         //Paginado
 
-        private int _reg_por_pagina=10;
+        private int _reg_por_pagina=2;
         private int _num_pagina=1;
         private List<Estudiante> listEstudiante;
 
@@ -30,9 +30,9 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             this.listTextBox = listTextBox;
             this.listLabel = listLabel;
 
-            image = (PictureBox)objetos[0];
-            _dataGridView = (DataGridView)objetos[1];
-            _numericUpDown = (NumericUpDown)objetos[2];
+            image = (PictureBox)objetos[0];//objetos
+            _dataGridView = (DataGridView)objetos[1];//Objetos
+            _numericUpDown = (NumericUpDown)objetos[2];//Objetos
 
             Restablecer();
         }
@@ -149,8 +149,6 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
 
 
-
-
         //MÉTODO QUE BUSCA UN ESTUDIANTE Y LO MUESTRA EN EL DataGridView
 
         public void SearchEstudiante(string campoABuscar)
@@ -205,7 +203,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         }
 
 
-
+        //MÉTODO ANEXO AL PAGINADOR
         public void Paginador(string metodo)
         {
             switch (metodo)
@@ -231,8 +229,8 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
 
 
-        
-        //Método para restablecer el formulario y que quede vacio cuando se envia todo
+
+        //MÉTODO PARA RESTABLECER EL FORMULARIO Y QUE QUEDE VACÍO CUANDO SE ENVÍA TODO
         private void Restablecer()
         {
             // Cambiamos  los textos de las Label y le damos color
@@ -270,5 +268,15 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
             SearchEstudiante("");
         }
+
+
+        //METODO PARA QUE EN PANTALLA PODRAMOS ELEGIR EL NUMERO DE REGISTROS POR PAGINA CON EL "numericUpDown"
+        public void Registro_Paginas()
+        {
+            _num_pagina = 1;
+           _reg_por_pagina = (int)_numericUpDown.Value;
+        }
     }
+
+
 }

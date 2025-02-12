@@ -19,6 +19,8 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         private NumericUpDown _numericUpDown;
         private Paginador<Estudiante> _paginador; //** Creamos un atributo de la clase generica Paginador que va a contener la clase de modelo Estudiante
 
+        private bool allFieldsFilled=true;//Booleano para el manejo de los campos del formulario
+
         //Paginado
 
         private int _reg_por_pagina=2;
@@ -40,11 +42,9 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
 
 
-        //MÉTODO QUE REGUSTRA UN ESTUDIANTE CON EL BOTON AGREGAR()
+        //MÉTODO QUE COMPRUEBA QUE TODOS LOS CAMPOS ESTEN RELLENOS DEL FORMULARIO Y LANZA EL METODO QUE LOS GUARDA save()
         public void Registrar()
         {
-            bool allFieldsFilled = true;
-
             // campos NID
 
             if (listTextBox[0].Text.Equals(""))
@@ -117,6 +117,13 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 allFieldsFilled = false;
             }
 
+            Save();//Metodo para guardar un nuevo estudiante;
+           
+        }
+
+        //MÉTODO QUE GUARTDA LOS REGISTROS EN LA BBDD
+        public void Save()
+        {
             if (allFieldsFilled)//Si todos los campos estan en TRUE
             {
                 BeginTransactionAsync();//Indicamos a la libreria LinqToBd que vamos a usar transacciones
@@ -145,6 +152,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                     RollbackTransaction();//Revierte la transaccion
                 }
             }
+
         }
 
 

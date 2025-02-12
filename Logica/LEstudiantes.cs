@@ -34,6 +34,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
         private List<Estudiante> listEstudiante;
 
+        //***MÉTODO CONSTRUCTOR***
         public LEstudiantes(List<TextBox> listTextBox, List<Label> listLabel, object[] objetos)
         {
             this.listTextBox = listTextBox;
@@ -53,7 +54,8 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         //MÉTODO QUE COMPRUEBA QUE TODOS LOS CAMPOS ESTEN RELLENOS DEL FORMULARIO Y LANZA EL METODO QUE LOS GUARDA save()
         public void Registrar()
         {
-            // campos NID
+            // Validación de campos vacíos
+            bool allFieldsFilled = true;
 
             if (listTextBox[0].Text.Equals(""))
             {
@@ -68,8 +70,6 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 listLabel[0].ForeColor = System.Drawing.Color.Green;
             }
 
-            // campo Nombre
-
             if (listTextBox[1].Text.Equals(""))
             {
                 listLabel[1].Text = "rellene Nombre";
@@ -82,8 +82,6 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 listLabel[1].Text = "Nombre";
                 listLabel[1].ForeColor = System.Drawing.Color.Green;
             }
-
-            // campo Apellido
 
             if (listTextBox[2].Text.Equals(""))
             {
@@ -98,9 +96,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 listLabel[2].ForeColor = System.Drawing.Color.Green;
             }
 
-            // campo Email
-
-            if (listTextBox[3].Text.Equals(""))//Si no hay nada en el text box mail
+            if (listTextBox[3].Text.Equals(""))
             {
                 listLabel[3].Text = "rellene Email";
                 listLabel[3].ForeColor = System.Drawing.Color.Red;
@@ -113,42 +109,41 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 listLabel[3].ForeColor = System.Drawing.Color.Green;
             }
 
-
-
-
             // Verificar si el email ya está registrado en la base de datos
+            var emailExists = _Estudiante.Any(e => e.email.Equals(listTextBox[3].Text));
 
-            var emailExists = _Estudiante.Any(e => e.email.Equals(listTextBox[3].Text));// devuelve bool si hay un mail registrado
+            // Buscamos el estudiante con el ID actual
+            var estudianteEncontrado = _Estudiante.FirstOrDefault(e => e.id == _idEstudiante);
 
 
-            //Metemos en una variable el estudiante completo con el cual estamos trabajando por su id.
-
-            var estudiante = _Estudiante.FirstOrDefault(e => e.id == _idEstudiante);
-
-            
-            
-            if (emailExists)//Si el mail existe, hay dos posibilidades
+            // Si el email ya existe...
+            if (emailExists)
             {
-                //Si el id del estudiante sacado del dataGridView (_idEstudiante) es igual a la del formulario(estudiante.id), se puede modificar
+                // Solo permitir si el estudiante que estamos editando ya tiene este email (no está duplicado)
 
-                if (estudiante.id.Equals(_idEstudiante))
+                if (estudianteEncontrado != null && estudianteEncontrado.email.Equals(listTextBox[3].Text))
                 {
-                    Save();//Dejamos modificar
+                    Save(); // Permitir guardar porque es el mismo estudiante
                 }
                 else
                 {
-                    //No dejamos modificar
-
+                    // No permitir guardar porque el email ya pertenece a otro estudiante
                     listLabel[3].Text = "Email ya registrado";
                     listLabel[3].ForeColor = System.Drawing.Color.Red;
                     listTextBox[3].Focus();
                     allFieldsFilled = false;
-                }  
+                }
             }
-
-            Save();//Metodo para guardar un nuevo estudiante;
-           
+            else
+            {
+                // Si el email no existe en la base de datos, se permite guardar
+                if (allFieldsFilled)
+                {
+                    Save();
+                }
+            }
         }
+
 
         //MÉTODO QUE GUARDA LOS REGISTROS EN LA BBDD
         public void Save()
@@ -209,7 +204,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         }
 
 
-        //MÉTODO QUE BUSCA UN ESTUDIANTE (desde el campo de texto buiscar) Y LO MUESTRA EN EL DataGridView
+        //MÉTODO QUE BUSCA UN ESTUDIANTE (desde el campo de texto buscar) Y LO MUESTRA EN EL DataGridView
         public void SearchEstudiante(string campoABuscar)
         {
             // Calculamos el índice de inicio para la paginación

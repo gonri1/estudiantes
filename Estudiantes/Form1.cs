@@ -24,16 +24,11 @@ namespace Estudiantes
 
         public Form1()
         {
-           
-
-            //inicializa el formulario
+            //inicializa la interfaz, VIENE POR DEFECTO
 
             InitializeComponent();
 
-
-
             //Captura los TextBox del formulario en una lista
-
 
             var listTextBox = new List<TextBox>();//Lista de TextBox
 
@@ -57,16 +52,14 @@ namespace Estudiantes
 
 
 
-            // Lista de imagenes en bytes
+            // Lista de objetos diferentes (sacados de la interfaz)
 
             Object[] objetos = { 
                 pictureBoxImage,
                 dataGridView1,
-                numericUpDown1
+                numericUpDown1,
             };
             
-
-
 
             //****INSTANCIA PRINCIPAL***** con sus parametros,elementos de texto del formulario y las labels****
 
@@ -76,6 +69,8 @@ namespace Estudiantes
 
         }
 
+
+        //EVENTO PARA CARGAR LA IMAGEN EN EL PICTUREBOX
         private void pictureBoxImage_Click(object sender, EventArgs e)
         {
             estudiante.uploadimage.CargarImagen(pictureBoxImage);//Carga la imagen en el PictureBoxImage (este es su nombre de logica)
@@ -183,6 +178,8 @@ namespace Estudiantes
         }
 
 
+
+
         //********EVENTOS DEL PAGINADOR*************************
 
 
@@ -214,6 +211,34 @@ namespace Estudiantes
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             estudiante.Registro_Paginas();
+        }
+
+
+
+        //EVENTOS PARA RELLENAR EL FORMULARIO CON UN ESTUDIANTE SELECCIONADO EN EL GRIDVIEW
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //Cuando pulsamos en la fila, nos muestra sus datos en el formulario
+
+            if (dataGridView1.Rows.Count !=0)
+            {
+                estudiante.GetEstudiante();
+                
+            }
+
+        }
+
+        private void dataGridView1_KeyUp(object sender, KeyEventArgs e)
+        {
+            //Cuando pulsamos las teclas arriba y abajo del teclado
+
+            if (dataGridView1.Rows.Count != 0)
+            {
+                estudiante.GetEstudiante();
+
+            }
+
         }
     }
 }

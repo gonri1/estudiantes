@@ -12,19 +12,26 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 {
     public class LEstudiantes : LibreriaClases
     {
+        //Generales
+
         private List<TextBox> listTextBox;
         private List<Label> listLabel;
         private PictureBox image;
-        private DataGridView _dataGridView;//Objeto del data grid del diséño (donde van a ir el listado impreso de los estudiantes)
-        private NumericUpDown _numericUpDown;
-        private Paginador<Estudiante> _paginador; //** Creamos un atributo de la clase generica Paginador que va a contener la clase de modelo Estudiante
-
         private bool allFieldsFilled=true;//Booleano para el manejo de los campos del formulario
+
+        //dataGridView
+
+        private DataGridView _dataGridView;//Objeto del data grid del diséño (donde van a ir el listado impreso de los estudiantes)
+        private int _idEstudiante = 0;
+        private string _accion = "insertar";
 
         //Paginado
 
         private int _reg_por_pagina=2;
         private int _num_pagina=1;
+        private NumericUpDown _numericUpDown;
+        private Paginador<Estudiante> _paginador; //** Creamos un atributo de la clase generica Paginador que va a contener la clase de modelo Estudiante
+
         private List<Estudiante> listEstudiante;
 
         public LEstudiantes(List<TextBox> listTextBox, List<Label> listLabel, object[] objetos)
@@ -35,6 +42,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             image = (PictureBox)objetos[0];//objetos
             _dataGridView = (DataGridView)objetos[1];//Objetos
             _numericUpDown = (NumericUpDown)objetos[2];//Objetos
+            
 
             Restablecer();
         }
@@ -156,9 +164,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         }
 
 
-
-        //MÉTODO QUE BUSCA UN ESTUDIANTE Y LO MUESTRA EN EL DataGridView
-
+        //MÉTODO QUE BUSCA UN ESTUDIANTE (desde el campo de texto buiscar) Y LO MUESTRA EN EL DataGridView
         public void SearchEstudiante(string campoABuscar)
         {
             // Calculamos el índice de inicio para la paginación
@@ -236,11 +242,18 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         }
 
 
-
-
         //MÉTODO PARA RESTABLECER EL FORMULARIO Y QUE QUEDE VACÍO CUANDO SE ENVÍA TODO
         private void Restablecer()
         {
+
+            // Limpiamos los textBox del formulario
+
+            listTextBox[0].Text = string.Empty;
+            listTextBox[1].Text = string.Empty;
+            listTextBox[2].Text = string.Empty;
+            listTextBox[3].Text = string.Empty;
+
+
             // Cambiamos  los textos de las Label y le damos color
 
             listLabel[0].Text = "Nid";
@@ -251,14 +264,6 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             listLabel[2].ForeColor = System.Drawing.Color.LightSlateGray;
             listLabel[3].Text = "Email";
             listLabel[3].ForeColor = System.Drawing.Color.LightSlateGray;
-
-            // Limpiamos los textBox del formulario
-
-            listTextBox[0].Text = string.Empty;
-            listTextBox[1].Text = string.Empty;
-            listTextBox[2].Text = string.Empty;
-            listTextBox[3].Text = string.Empty;
-
 
 
             // FRAGMENTO QUE SIRVE AL PAGINADOR
@@ -283,6 +288,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         {
             _num_pagina = 1;
            _reg_por_pagina = (int)_numericUpDown.Value;
+
            var list= _Estudiante.ToList();
 
             if (0 < list.Count)
@@ -290,6 +296,21 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 _paginador = new Paginador<Estudiante>(listEstudiante, listLabel[4], _reg_por_pagina);
                 SearchEstudiante("");
             }
+        }
+
+    
+        // MÉTODO PARA OBTENER LOS DATOS DEL ESTUDIANTE SELECCIONADO EN EL DATAGRIDVIEW
+        public void GetEstudiante()
+        {
+            // Cambiamos la acción a "update" para indicar que se va a actualizar un registro existente
+
+            _accion = "update";
+            _idEstudiante = Convert.ToInt16(_dataGridView.CurrentRow.Cells[0].Value);//Obtiene el valor[0] que es id de la fila en la que se esta
+
+            listTextBox[0].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[1].Value);
+            listTextBox[1].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[2].Value);
+            listTextBox[2].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[3].Value);
+            listTextBox[3].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[4].Value);
         }
     }
 

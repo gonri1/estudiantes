@@ -229,6 +229,7 @@ namespace Estudiantes
 
         }
 
+    
         private void dataGridView1_KeyUp(object sender, KeyEventArgs e)
         {
             //Cuando pulsamos las teclas arriba y abajo del teclado
@@ -238,6 +239,19 @@ namespace Estudiantes
                 estudiante.GetEstudiante();
 
             }
+
+        }
+
+
+        //EVENTO  QUE CONTROLA LA ELIMINACION DE UN CLIENTE
+        private void buttonEliminar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonCancelar_Click(object sender, EventArgs e)
+        {
+            estudiante.Restablecer();
 
         }
     }

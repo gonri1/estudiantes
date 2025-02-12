@@ -128,6 +128,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 else
                 {
                     // No permitir guardar porque el email ya pertenece a otro estudiante
+
                     listLabel[3].Text = "Email ya registrado";
                     listLabel[3].ForeColor = System.Drawing.Color.Red;
                     listTextBox[3].Focus();
@@ -283,7 +284,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
 
         //MÉTODO PARA RESTABLECER EL FORMULARIO Y QUE QUEDE VACÍO CUANDO SE ENVÍA TODO
-        private void Restablecer()
+        public void Restablecer()
         {
             _accion = "insert";//Restablecemos la variable accion a "insert"
             _num_pagina = 1;//Restablecemos y nos pasa a la página 1

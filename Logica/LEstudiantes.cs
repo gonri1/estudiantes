@@ -113,23 +113,44 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
                 listLabel[3].ForeColor = System.Drawing.Color.Green;
             }
 
+
+
+
             // Verificar si el email ya está registrado en la base de datos
 
             var emailExists = _Estudiante.Any(e => e.email.Equals(listTextBox[3].Text));// devuelve bool si hay un mail registrado
 
-            if (emailExists)
+
+            //Metemos en una variable el estudiante completo con el cual estamos trabajando por su id.
+
+            var estudiante = _Estudiante.FirstOrDefault(e => e.id == _idEstudiante);
+
+            
+            
+            if (emailExists)//Si el mail existe, hay dos posibilidades
             {
-                listLabel[3].Text = "Email ya registrado";
-                listLabel[3].ForeColor = System.Drawing.Color.Red;
-                listTextBox[3].Focus();
-                allFieldsFilled = false;
+                //Si el id del estudiante sacado del dataGridView (_idEstudiante) es igual a la del formulario(estudiante.id), se puede modificar
+
+                if (estudiante.id.Equals(_idEstudiante))
+                {
+                    Save();//Dejamos modificar
+                }
+                else
+                {
+                    //No dejamos modificar
+
+                    listLabel[3].Text = "Email ya registrado";
+                    listLabel[3].ForeColor = System.Drawing.Color.Red;
+                    listTextBox[3].Focus();
+                    allFieldsFilled = false;
+                }  
             }
 
             Save();//Metodo para guardar un nuevo estudiante;
            
         }
 
-        //MÉTODO QUE GUARTDA LOS REGISTROS EN LA BBDD
+        //MÉTODO QUE GUARDA LOS REGISTROS EN LA BBDD
         public void Save()
         {
             if (allFieldsFilled)//Si todos los campos estan en TRUE
@@ -142,17 +163,41 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
 
                     var imageArray = uploadimage.ImageToByte(image.Image);
 
-                    // Insertamos los valores del formulario en el objeto _Estudiante
-                    _Estudiante.Value(e => e.nid, listTextBox[0].Text)
-                    .Value(e => e.nombre, listTextBox[1].Text)
-                    .Value(e => e.apellido, listTextBox[2].Text)
-                    .Value(e => e.email, listTextBox[3].Text)
-                    .Value(e => e.image, imageArray).Insert();
+                    switch (_accion)
+                    {
+                        case "insert":
+
+                            // Insertamos los valores del formulario en el objeto _Estudiante
+
+                            _Estudiante.Value(e => e.nid, listTextBox[0].Text)
+                            .Value(e => e.nombre, listTextBox[1].Text)
+                            .Value(e => e.apellido, listTextBox[2].Text)
+                            .Value(e => e.email, listTextBox[3].Text)
+                            .Value(e => e.image, imageArray)
+                            .Insert();
+                            break;
+
+
+                        case "update":
+
+                            // Modificamos los valores del formulario sacados del dataGridView
+
+                            _Estudiante.Where(e => e.id == _idEstudiante)
+                            .Set(e => e.nid, listTextBox[0].Text)
+                            .Set(e => e.nombre, listTextBox[1].Text)
+                            .Set(e => e.apellido, listTextBox[2].Text)
+                            .Set(e => e.email, listTextBox[3].Text)
+                            .Set(e => e.image, imageArray)
+                            .Update();
+
+                            break;
+                    
+                    }
 
                     // Confirmamos la transacción si no hubo errores
                     CommitTransaction();
 
-                    //Restablecemos Labes y limpiamos campos del formulario
+                    //Restablecemos Labels y limpiamos campos del formulario
                     Restablecer();
                 }
                 catch (Exception)
@@ -245,6 +290,9 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         //MÉTODO PARA RESTABLECER EL FORMULARIO Y QUE QUEDE VACÍO CUANDO SE ENVÍA TODO
         private void Restablecer()
         {
+            _accion = "insert";//Restablecemos la variable accion a "insert"
+            _num_pagina = 1;//Restablecemos y nos pasa a la página 1
+            _idEstudiante = 0;//Retablecemos la id del estudiante del data grid para no crear confusiones
 
             // Limpiamos los textBox del formulario
 
@@ -299,12 +347,13 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
         }
 
     
-        // MÉTODO PARA OBTENER LOS DATOS DEL ESTUDIANTE SELECCIONADO EN EL DATAGRIDVIEW
+        // MÉTODO PARA OBTENER LOS DATOS DEL ESTUDIANTE SELECCIONADO EN EL DATAGRIDVIEW  E INSERTARLOS EN EL FORMULARIO
         public void GetEstudiante()
         {
             // Cambiamos la acción a "update" para indicar que se va a actualizar un registro existente
 
-            _accion = "update";
+            _accion = "update";//Generamos la accion update para manejarla en registrar.
+
             _idEstudiante = Convert.ToInt16(_dataGridView.CurrentRow.Cells[0].Value);//Obtiene el valor[0] que es id de la fila en la que se esta
 
             listTextBox[0].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[1].Value);
@@ -312,6 +361,7 @@ namespace Logica//Este nanespace coincide con el nombre de la capa
             listTextBox[2].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[3].Value);
             listTextBox[3].Text = Convert.ToString(_dataGridView.CurrentRow.Cells[4].Value);
         }
+       
     }
 
 
